@@ -111,6 +111,8 @@ nunit-*.xml
 [Rr]eleasePS/
 dlldata.c
 
+build/
+
 # Benchmark Results
 BenchmarkDotNet.Artifacts/
 
