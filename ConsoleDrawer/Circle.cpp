@@ -17,8 +17,8 @@ void Circle::draw_circle(ConsoleCanvas& canvas, int xc, int yc, int x, int y) co
 
 void Circle::draw(ConsoleCanvas& canvas) {
 	int x = 0;
-	int y = static_cast<int>(m_radius);
-	int d = 4 - 2 * static_cast<int>(m_radius);
+	int y = m_radius;
+	int d = 4 - 2 * m_radius;
 	draw_circle(canvas, get_position().x, get_position().y, x, y);
 
 	while (y >= x)
@@ -27,11 +27,11 @@ void Circle::draw(ConsoleCanvas& canvas) {
 		if (d > 0)
 		{
 			y--;
-			d = d + 4 * (x - y) + 10;
+			d = d + 2*x - 2*y + 1;
 		}
 		else
 		{
-			d = d + 4 * x + 6;
+			d = d + 2 * x + 1;
 		}
 		draw_circle(canvas, get_position().x, get_position().y, x, y);
 	}
