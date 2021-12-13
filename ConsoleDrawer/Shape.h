@@ -8,6 +8,7 @@ public:
 	virtual ~Shape() = default;
 
 	void set_position(Point position) { m_position = position; }
+	void move_by(Point offset) { m_position = m_position + offset; };
 	inline void set_glyph(const char& glyph) { m_glyph = glyph; }
 
 	inline Point get_position() const { return m_position; }
