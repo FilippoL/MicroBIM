@@ -8,9 +8,5 @@ int main() {
 	builder.initialise_canvas_dimension();
 	builder.run();
 
-	//builder.make_default_prefab();
-
-	std::cin.ignore();
-
 	return 0;
 }
