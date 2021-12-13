@@ -1,21 +1,25 @@
+#pragma once
+
 #include <vector>
 #include <map>
 #include <numeric>
-
-#include "Shape.h"
-
-#include "Box.h"
-#include "Line.h"
-#include "Circle.h"
-
-#include "DataStructures.h"
-
 #include "ConsoleCanvas.h"
+
+#include "House.h"
+#include "Door.h"
+#include "Window.h"
+
 #include "UserInputHandler.h"
 #include "UserInterfaceRenderer.h"
 
 class Builder
 {
+	enum class ComponentType {
+		HOUSE,
+		WINDOW,
+		DOOR
+	};
+
 public:
 	Builder() = default;
 	~Builder();
@@ -24,27 +28,20 @@ public:
 
 	void initialise_canvas_dimension();
 
-	void make_default_prefab();
-
 private:
 
-	void initialise_new_object(const std::string& label, bool needspositioning = true, bool isfilled = true, bool hasdimension = true);
+	void initialise_new_object(const ComponentType& type);
 
-	Dimension m_houseDimension{ 0,0 };
+	void build_component(House* s);
+
+	Builder::ComponentType map_num_to_enum(int i) const;
+
+	void draw_all();
+
 	Dimension m_canvasDimension{ 50,50 };
-
-	Point m_housePosition{ 0,0 };
-
-	std::map<Shape*, double> m_houseComponents;
 
 	ConsoleCanvas m_canvas;
 
 	UserInterfaceRenderer m_inputRenderer;
 	UserInputHandler m_inputHandler;
-	std::string m_userAnswer;
-
-	std::map<char, double> m_materials{ { '#', 0.5}, { 'O', 0.75}, {'*', 1.0} };
-	double m_currentPrice = 0.0;
-
-	void draw_all();
 };

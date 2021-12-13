@@ -3,7 +3,7 @@
 std::string UserInputHandler::get_parsed_input() {
 	std::getline(std::cin, m_input);
 
-	std::regex regx("[@_!$%^&()<>?/|}{~:Lèàùòs+]");
+	std::regex regx("[@_!$%^&()<>?/|}{~:Lèàùò+]");
 
 	clean_string(m_input);
 

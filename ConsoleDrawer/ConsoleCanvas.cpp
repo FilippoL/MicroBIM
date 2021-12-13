@@ -25,11 +25,9 @@ void ConsoleCanvas::render_border(char& character, size_t iteration_counter) con
 
 bool ConsoleCanvas::set_canvas_tile(Point position, char what_char)
 {
-	//position.y = is_exact ? position.y : static_cast<int>(static_cast<float>(position.y) * m_charApectRatio);
-
 	int new_index = (position.x + m_canvasDimension.w / 2) + m_canvasDimension.w * (position.y + m_canvasDimension.h / 2);
 
-	if (new_index > m_canvas.size()) { return false; }
+	if (new_index >= m_canvas.size()) { return false; }
 
 	m_canvas[new_index] = what_char;
 

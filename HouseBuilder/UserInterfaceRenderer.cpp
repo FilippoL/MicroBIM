@@ -23,7 +23,7 @@ void UserInterfaceRenderer::draw_vector(const std::vector < std::string >& optio
 		std::cout << counter << ") " << option << std::endl;
 	}
 
-	std::cout << "\n\n";
+	std::cout << "\n";
 }
 
 void UserInterfaceRenderer::draw_map(const std::map < char, double >& items) const {
