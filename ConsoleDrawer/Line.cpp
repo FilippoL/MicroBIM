@@ -5,45 +5,40 @@ Line::Line(Point origin, Point target, bool exact) : m_exact(exact), m_target(ta
 }
 
 void Line::draw(ConsoleCanvas& canvas) {
-	// Straight lines
-	if (m_target.y == get_position().y) {
-		for (int i = get_position().x; i <= m_target.x; i++)
-		{
-			canvas.set_canvas_tile(Point{ i, get_position().y }, get_glyph());
-		}
-		return;
-	}
-	else if (m_target.x == get_position().x)
-	{
-		for (int i = get_position().y; i <= m_target.y; i++)
-		{
-			canvas.set_canvas_tile(Point{ get_position().x, i }, get_glyph());
-		}
-		return;
-	}
-
 	// Bresenham’s Line Drawing Algorithm
-	int dx = m_target.x - get_position().x;
-	int dy = m_target.y - get_position().y;
-
 	int x = get_position().x;
 	int y = get_position().y;
 
-	int p = 2 * dy - dx;
+	int w = m_target.x - get_position().x;
+	int h = m_target.y - get_position().y;
+	int dx1 = 0, dy1 = 0, dx2 = 0, dy2 = 0;
 
-	while (x <= m_target.x)
-	{
-		if (p >= 0)
-		{
-			canvas.set_canvas_tile(Point{ x, y }, get_glyph());
-			y = y + 1;
-			p = p + 2 * dy - 2 * dx;
+	if (w < 0) dx1 = -1; else if (w > 0) dx1 = 1;
+	if (h < 0) dy1 = -1; else if (h > 0) dy1 = 1;
+	if (w < 0) dx2 = -1; else if (w > 0) dx2 = 1;
+
+	int longest = abs(w);
+	int shortest = abs(h);
+
+	if (!(longest > shortest)) {
+		std::swap(longest, shortest);
+		if (h < 0) dy2 = -1; else if (h > 0) dy2 = 1;
+		dx2 = 0;
+	}
+
+	int numerator = longest >> 1;
+
+	for (int i = 0; i <= longest; i++) {
+		canvas.set_canvas_tile(Point{ x, y }, get_glyph());
+		numerator += shortest;
+		if (!(numerator < longest)) {
+			numerator -= longest;
+			x += dx1;
+			y += dy1;
 		}
-		else
-		{
-			canvas.set_canvas_tile(Point{ x, y }, get_glyph());
-			p = p + 2 * dy;
+		else {
+			x += dx2;
+			y += dy2;
 		}
-		x = x + 1;
 	}
 }
