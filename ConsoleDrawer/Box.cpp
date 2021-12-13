@@ -6,9 +6,12 @@ Box::Box(Point position, Dimension dimension, bool isfilled) : m_dimension(dimen
 }
 
 void Box::draw(ConsoleCanvas& canvas) {
-	// Center coordinates
+	std::vector<Line> m_sides;
 
+	// Center coordinates
 	const Point centred_origin{ get_position().x - m_dimension.w / 2 , get_position().y - m_dimension.h / 2 };
+
+	if (m_dimension == Dimension{ 0,0 }) { return; }
 
 	if (m_isFilled) {
 		for (int i = 0; i < m_dimension.w; i++)
@@ -28,5 +31,4 @@ void Box::draw(ConsoleCanvas& canvas) {
 		side.set_glyph(get_glyph());
 		side.draw(canvas);
 	}
-	m_sides.clear();
 }

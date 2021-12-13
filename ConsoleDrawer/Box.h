@@ -10,6 +10,7 @@ class Box : public Line
 public:
 	Box() = default;
 	Box(Point position, Dimension dimension, bool is_filled = true);
+
 	~Box() override = default;
 
 	inline bool get_is_filled() const { return m_isFilled; }
@@ -21,7 +22,6 @@ public:
 	double get_area()override { return static_cast<double>(m_dimension.w) * static_cast<double>(m_dimension.h); }
 
 private:
-	Dimension m_dimension{ 10,10 };
+	Dimension m_dimension{ 0,0 };
 	bool m_isFilled = true;
-	std::vector<Line> m_sides;
 };
