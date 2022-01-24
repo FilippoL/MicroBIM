@@ -1,7 +1,7 @@
 #include "Line.h"
 
 Line::Line(Point origin, Point target, bool exact) : m_exact(exact), m_target(target) {
-	set_position(origin);
+	m_position = origin;
 }
 
 void Line::draw(ConsoleCanvas& canvas) {

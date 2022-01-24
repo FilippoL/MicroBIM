@@ -7,7 +7,6 @@ void Builder::initialise_new_object(const ComponentType& type)
 	case Builder::ComponentType::HOUSE:
 		build_component(new House);
 		break;
-
 	case Builder::ComponentType::WINDOW:
 		build_component(new Window);
 		break;
@@ -19,15 +18,15 @@ void Builder::initialise_new_object(const ComponentType& type)
 	}
 }
 
-void Builder::build_component(House* component) {
-	bool valid = false;
-
-	while (!valid) { draw_all(); valid = component->initialise_size(); } valid = false;
-	while (!valid) { draw_all(); valid = component->initialise_position(); } valid = false;
-	while (!valid) { draw_all(); valid = component->initialise_material(); }
-
-	delete component;
-}
+//void Builder::build_component(House* component) {
+//	bool valid = false;
+//
+//	while (!valid) { draw_all(); valid = component->initialise_size(); } valid = false;
+//	while (!valid) { draw_all(); valid = component->initialise_position(); } valid = false;
+//	while (!valid) { draw_all(); valid = component->initialise_material(); }
+//
+//	delete component;
+//}
 
 Builder::ComponentType Builder::map_num_to_enum(int i) const {
 	if (i == 1) { return Builder::ComponentType::HOUSE; }
@@ -37,13 +36,12 @@ Builder::ComponentType Builder::map_num_to_enum(int i) const {
 
 void Builder::run()
 {
-	bool invalid{ true };
 	std::string m_userAnswer{ "" };
 
-	while (invalid)
+	while (true)
 	{
 		draw_all();
-		std::cout << "Current total: " << std::fixed << std::setprecision(1) << House::get_total_price() << "$\n\n";
+		std::cout << "Current total: " << std::fixed << std::setprecision(1) << m_house.get_total_price() << "$\n\n";
 		std::vector<std::string>options{ "House", "Window", "Door" };
 		m_inputRenderer.draw_vector(options);
 		m_inputRenderer.draw_text("Add a new object to your canvas by typing any index of the above listed components.\nType 0 to exit.");
@@ -79,18 +77,7 @@ void Builder::draw_all() {
 	m_inputRenderer.clear_screen();
 	m_canvas.clear_canvas();
 
-	for (auto const& item : House::m_houseComponents)
-	{
-		item.first->draw(m_canvas);
-	}
+	m_house.draw(m_canvas);
 
 	m_canvas.render();
-}
-
-Builder::~Builder()
-{
-	for (auto element : House::m_houseComponents) {
-		delete element.first;
-	}
-	House::m_houseComponents.clear();
 }

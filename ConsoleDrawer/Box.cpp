@@ -1,8 +1,7 @@
 #include "Box.h"
 
 Box::Box(Point position, Dimension dimension, bool isfilled) : m_dimension(dimension), m_isFilled(isfilled) {
-	set_position(position);
-	set_is_filled(isfilled);
+	m_position = position;
 }
 
 void Box::draw(ConsoleCanvas& canvas) {

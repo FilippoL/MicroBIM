@@ -9,64 +9,105 @@
 #include "Shape.h"
 #include "Box.h"
 #include "Circle.h"
+#include "Door.h"
+#include "Window.h"
 
-using ComponentsContainer = std::map<Shape*, std::pair<std::string, double>>;
-
-class House
-{
+class HouseEntity : public Entity {
 public:
-	House() = default;
-	virtual ~House() = default;
-
-	virtual bool initialise_position();
-	bool initialise_material();
-	virtual bool initialise_size();
-
-	static ComponentsContainer m_houseComponents;
+	virtual bool initialise_position() = 0;
+	virtual bool initialise_size() = 0;
+	virtual double get_price() { return m_currentComponentPrice; };
 
 protected:
-	bool init_squared_component_dimension(Box& box);
-
-#pragma region Getters and Setters
-	inline UserInterfaceRenderer get_input_renderer() const { return m_inputRenderer; };
-	inline UserInputHandler get_input_handler() const { return m_inputHandler; };
-
-	inline std::string& get_answer_object() { return m_userAnswer; };
-	inline std::string& get_current_component_label() { return m_currentLabel; };
-
-	inline double get_current_component_price() const { return m_currentComponentPrice; };
-	inline void set_current_component_price(double p) { m_currentComponentPrice = p; };
-
-	inline double get_aspect_ratio() const { return m_aspectRatio; };
-	inline void set_aspect_ratio(double ar) { m_aspectRatio = ar; };
-
-	inline Shape* get_current_component_primitive() const { return m_currentComponentPrimitive; }
-	inline void set_current_component_primitive(Shape* curr) { m_currentComponentPrimitive = curr; }
-
-	std::map<char, double> get_materials_map() const { return m_materials; }
-
-	std::vector<Shape*> get_components_by_label(const std::string& key) const;
-
-public:
-	static double get_total_price();
-#pragma endregion Getters and setters for private member variables
-
-private:
-
-	Shape* m_currentComponentPrimitive = nullptr;
-
-	UserInterfaceRenderer m_inputRenderer;
-	UserInputHandler m_inputHandler;
-
-	std::string m_userAnswer = "";
-	std::string m_currentLabel = "house";
-
-	Box m_house;
-
 	double m_currentComponentPrice = 0.0;
-	double m_aspectRatio = 0.5;
+	std::string m_currentLabel = "";
 
 	std::map<char, double> m_materials{ { '#', 0.50},
 										{ 'O', 0.75},
 										{ '*', 1.00} };
+
+	FreePositionInitialiser m_freePositionInitialiser;
+	FreePositionInitialiser m_fixedPositionInitialiser;
+
+	SquaredComponentSizeInitialiser m_squaredSizeInitialiser;
+	RoundComponentSizeInitialiser m_roundSizeInitialiser;
+};
+
+class IInitialiser {
+protected:
+	UserInterfaceRenderer m_inputRenderer;
+	UserInputHandler m_inputHandler;
+	std::string m_userAnswer = "";
+};
+
+class FreePositionInitialiser : public IInitialiser {
+public:
+	virtual bool initialise_position(const std::string& label, Entity& primitive);
+
+	virtual ~FreePositionInitialiser() = default;
+};
+
+class ConstrainedPositionInitialiser : public IInitialiser {
+public:
+	virtual bool initialise_position(const std::string& label, Entity& primitive);
+
+	virtual ~ConstrainedPositionInitialiser() = default;
+};
+
+class RoundComponentSizeInitialiser : public IInitialiser {
+public:
+	virtual bool initialise_size(const std::string& label, Circle& primitive);
+
+	virtual ~RoundComponentSizeInitialiser() = default;
+};
+
+class SquaredComponentSizeInitialiser : public IInitialiser {
+public:
+	virtual bool initialise_size(const std::string& label, Box& primitive);
+
+	virtual ~SquaredComponentSizeInitialiser() = default;
+};
+
+class House : public HouseEntity, public IInitialiser
+{
+public:
+	House() = default;
+	~House() override = default;
+
+	bool initialise_position() override { m_freePositionInitialiser.initialise_position(m_currentLabel, m_house); };
+	bool initialise_material(Shape* shape);
+	bool initialise_size() override { m_squaredSizeInitialiser.initialise_size(m_currentLabel, m_house); };
+
+	double get_total_price() {
+		double totalPrice = 0.0;
+
+		for (auto& window : m_windows)
+		{
+			totalPrice += window.get_price();
+		}
+		for (auto& door : m_doors)
+		{
+			totalPrice += door.get_price();
+		}
+
+		return totalPrice;
+	}
+
+	void draw(ConsoleCanvas& canvas) override {
+		m_house.draw(canvas);
+
+		for (auto& window : m_windows)
+		{
+			window.draw(canvas);
+		}
+		for (auto& door : m_doors)
+		{
+			door.draw(canvas);
+		}
+	};
+
+private:
+	std::vector<Window> m_windows;
+	std::vector<Door> m_doors;
+	Box m_house;
 };

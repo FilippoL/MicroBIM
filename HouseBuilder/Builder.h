@@ -40,6 +40,8 @@ private:
 
 	Dimension m_canvasDimension{ 50,50 };
 
+	House m_house;
+
 	ConsoleCanvas m_canvas;
 
 	UserInterfaceRenderer m_inputRenderer;
